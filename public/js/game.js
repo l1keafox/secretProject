@@ -15,7 +15,7 @@ var GAME = {
   // set up some initial values
   WIDTH: 320,
   HEIGHT: 480,
-  nextBubble: 100,
+  nextBubble: 0,
   entities: [],
   // we'll set the rest of these
   // in the init function
