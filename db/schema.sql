@@ -1,0 +1,3 @@
+DROP DATABASE IF EXISTS alphaGame_db;
+
+CREATE DATABASE alphaGame_db;
