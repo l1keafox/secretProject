@@ -1,6 +1,7 @@
-<style type="text/css">
-</style>
-<canvas id="canvas"> </canvas>
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Socket.IO chat</title>
     <style>
       body { margin: 0; padding-bottom: 3rem; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; }
 
@@ -13,11 +14,15 @@
       #messages > li { padding: 0.5rem 1rem; }
       #messages > li:nth-child(odd) { background: #efefef; }
     </style>
+  </head>
   <body>
     <ul id="messages"></ul>
     <form id="form" action="">
       <input id="input" autocomplete="off" /><button>Send</button>
     </form>
+    <script src="/socket.io/socket.io.js"></script>
+    <script>
+      var socket = io();
+    </script>    
   </body>
-<script src="/socket.io/socket.io.js"></script>
-<script src="/js/game.js"></script>
+</html>
