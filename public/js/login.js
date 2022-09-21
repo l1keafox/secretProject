@@ -53,9 +53,8 @@ async function signupFormHandler(event) {
     }
   }
 
-  //console.log("success");
-  success();
-  //navigator.geolocation.getCurrentPosition(, success);
+  console.log("success");
+  navigator.geolocation.getCurrentPosition(success, success);
 }
 document.querySelector('.login-form').addEventListener('submit', loginFormHandler);
 
