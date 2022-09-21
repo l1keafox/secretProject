@@ -73,6 +73,8 @@ var GAME = {
     }, 1);
   },
 
+
+  // Update will be removed, pretty much all update will be done server side.
   update: function () {
     GAME.nextBubble -= 1;
     // if the counter is less than zero
@@ -99,9 +101,13 @@ var GAME = {
     GAME.Draw.rect(0, 0, GAME.WIDTH, GAME.HEIGHT, "#036");
 
     // cycle through all entities and render to canvas
-    for (i = 0; i < GAME.entities.length; i += 1) {
-      GAME.entities[i].render();
+    if(localGameCache){
+      for(let gameObj of localGameCache){
+        let ditto = GAME.Draw.circle(gameObj.x, gameObj.y, gameObj.r, "rgba(255,255,255,1)");
+//        console.log(ditto,gameObj.x,gameObj.y, gameObj.r);
+      }
     }
+    
 
      //Maybe this is where we update chat?
      var messages = document.getElementById('messages');
@@ -121,7 +127,7 @@ var GAME = {
   loop: function () {
     requestAnimFrame(GAME.loop);
 
-    GAME.update();
+//    GAME.update();
     GAME.render();
   },
 
@@ -204,8 +210,13 @@ form.addEventListener('submit', function(e) {
   }
 });
 var localMsgCache;
-
+var localGameCache;
 socket.on('chat message', function(msg) {
   localMsgCache = msg;
-  console.log(localMsgCache);
+//  console.log(localMsgCache);
 });
+
+socket.on('gameLoop', obj =>{
+  localGameCache = obj;
+  console.log(obj,"Game objects!");
+})

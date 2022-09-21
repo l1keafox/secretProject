@@ -73,6 +73,51 @@ app.use(express.static(path.join(__dirname, "public")));
 
 app.use(routes);
 
+
+class Bubble{
+  constructor(){
+    this.type = "bubble";
+    this.r = 5; // the radius of the bubble
+    this.x = 100;
+    this.y = 480; // make sure it starts off screen
+  }
+  update(){
+    this.y -= 1;
+  
+    // if off screen, flag for removal
+    if (this.y < -10) {
+      this.remove = true;
+    }
+  }
+  render(){
+    return 'circle';
+  }
+}
 // sequelize.sync({ force: false }).then(() => {
 //   app.listen(PORT, () => console.log("Now listening http://localhost:3001/"));
 // });
+let frames = 30;
+let nextBubble = 0;
+let bubbleTimer = 40;
+let bubbleArray = [];
+function doLoop(i) {
+  console.log('Doin Game Loops',nextBubble);
+  nextBubble--;
+  if(nextBubble<= 0){
+    nextBubble = bubbleTimer;
+    bubbleArray.push(new Bubble());
+    console.log("creating bubble:",bubbleArray);
+    console.log('number of bubbles',bubbleArray.length);
+  }
+  // UPdate
+
+  for(let bubb of bubbleArray){
+    bubb.update();
+  }
+  io.emit('gameLoop', bubbleArray);
+  setTimeout(() => {
+    doLoop(++i);
+  }, 1000/frames)
+}
+
+doLoop(0);
