@@ -36,6 +36,9 @@ io.on('connection', (socket) => {
     if(!convo) convo = [];
     convo.push(msg);
     console.log(convo);
+    if(convo.length > 10){
+      convo.shift();
+    }
     io.emit('chat message', convo);
   });
   socket.on('disconnect', () => {
