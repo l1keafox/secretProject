@@ -37,7 +37,8 @@ server.listen(ioPORT, () => {
 //   }
 // });
 io.on('connection', (socket) => {
-  console.log('connection open');
+  console.log('connection open',socket.id,);
+  /// How would we get session cookie?
   io.emit('chat message', convo);
 
   socket.on('chat message', (msg) => {
@@ -62,6 +63,14 @@ io.on('connection', (socket) => {
       let badd = 10;
       if((bubb.x - msg.x < badd) && (bubb.x - msg.x > -badd ) && (bubb.y - msg.y < badd) && (bubb.y - msg.y > -badd ) ){
         console.log('hit?');
+        if(!convo) convo = [];
+        console.log(msg);
+        convo.push(' Bubble Hit By:'+socket.id);
+        if(convo.length > 10){
+          convo.shift();
+        }
+        io.emit('chat message', convo);
+    
         bubbleArray.splice(i,1);
         break;
       }

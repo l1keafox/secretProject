@@ -15,6 +15,7 @@ router.post("/", async (req, res) => {
       req.session.userName = req.body.username;
       res.status(200).json(createUser);
     });
+    console.log(req.body.username,"created?");
   } catch (err) {
     console.log(err);
     res.status(500).json(err);
