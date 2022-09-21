@@ -44,7 +44,24 @@ io.on('connection', (socket) => {
   socket.on('disconnect', () => {
     console.log('user disconnected');
   });  
+  socket.on("click",(msg)=>{
+    console.log("getting click from?",msg,msg.x);
+
+    let i = bubbleArray.length;
+    while(i--){
+      let bubb = bubbleArray[i];
+      //if(bubb.x )
+      let badd = 10;
+      if((bubb.x - msg.x < badd) && (bubb.x - msg.x > -badd ) && (bubb.y - msg.y < badd) && (bubb.y - msg.y > -badd ) ){
+        console.log('hit?');
+        bubbleArray.splice(i,1);
+        break;
+      }
+    }
+  })
+  
 });
+
 //server port
 const PORT = process.env.PORT || 3001;
 
@@ -78,7 +95,8 @@ class Bubble{
   constructor(){
     this.type = "bubble";
     this.r = 5; // the radius of the bubble
-    this.x = 100;
+    this.x = Math.floor( Math.random()*320);
+    
     this.y = 480; // make sure it starts off screen
   }
   update(){
@@ -101,7 +119,7 @@ let nextBubble = 0;
 let bubbleTimer = 40;
 let bubbleArray = [];
 function doLoop(i) {
-  console.log('Doin Game Loops',nextBubble);
+//  console.log('Doin Game Loops',nextBubble);
   nextBubble--;
   if(nextBubble<= 0){
     nextBubble = bubbleTimer;
@@ -114,6 +132,7 @@ function doLoop(i) {
   for(let bubb of bubbleArray){
     bubb.update();
   }
+
   io.emit('gameLoop', bubbleArray);
   setTimeout(() => {
     doLoop(++i);
