@@ -23,7 +23,7 @@ const server = http.createServer(app);
 const { Server } = require("socket.io");
 const io = new Server(server);
 const ioPORT = process.env.PORT || 3000;
-
+let convo;
 server.listen(ioPORT, () => {
   console.log('listening on *:3000');
 });
@@ -31,8 +31,10 @@ server.listen(ioPORT, () => {
 io.on('connection', (socket) => {
   console.log('connection open');
   socket.on('chat message', (msg) => {
-    console.log('emit');
-    io.emit('chat message', msg);
+    if(!convo) convo = [];
+    convo.push(msg);
+    console.log(convo);
+    io.emit('chat message', convo);
   });
   socket.on('disconnect', () => {
     console.log('user disconnected');

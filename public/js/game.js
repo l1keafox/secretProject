@@ -160,7 +160,6 @@ var socket = io();
 
 //GAME.init();
 //GAME.resize();
-var messages = document.getElementById('messages');
 var form = document.querySelector('#form');
 var input = document.querySelector('#input');
 var logout = document.querySelector("#logout");
@@ -189,9 +188,17 @@ form.addEventListener('submit', function(e) {
     input.value = '';
   }
 });
+var messages = document.getElementById('messages');
+
 socket.on('chat message', function(msg) {
-  var item = document.createElement('li');
-  item.textContent = msg;
-  messages.appendChild(item);
+  // e.preventDefault();
+  // let prsed = JSON.parse(msg);
+  messages.innerHTML = '';
+  for(let text of msg){
+    var item = document.createElement('li');
+    item.textContent = text;
+    messages.appendChild(item);
+  }
   window.scrollTo(0, document.body.scrollHeight);
+
 });
