@@ -30,6 +30,8 @@ server.listen(ioPORT, () => {
 
 io.on('connection', (socket) => {
   console.log('connection open');
+  io.emit('chat message', convo);
+
   socket.on('chat message', (msg) => {
     if(!convo) convo = [];
     convo.push(msg);
