@@ -15,6 +15,7 @@ const loginFormHandler = async (event) => {
     });
 
     if (response.ok) {
+      localStorage.setItem("userName",userName);
       document.location.replace("/");
     } else {
       alert("Login Failed");
@@ -47,6 +48,7 @@ async function signupFormHandler(event) {
       headers: { "Content-Type": "application/json" },
     });
     if (reponse.ok) {
+      localStorage.setItem("userName",userName);
       document.location.replace("/");
     } else {
       console.log("404");

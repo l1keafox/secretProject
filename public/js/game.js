@@ -163,10 +163,29 @@ var socket = io();
 var messages = document.getElementById('messages');
 var form = document.querySelector('#form');
 var input = document.querySelector('#input');
+var logout = document.querySelector("#logout");
+logout.addEventListener('click',async function(e){
+  e.preventDefault();
+  try{
+    const response = await fetch("/api/users/logout", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+    });
+    if (response.ok) {
+      document.location.replace("/");
+    } else {
+      alert("Logout Failed");
+    }
+  }catch (err){
+    console.log(err);
+  }
+});
+
 form.addEventListener('submit', function(e) {
   e.preventDefault();
   if (input.value) {
-    socket.emit('chat message', input.value);
+    const userString = localStorage.getItem("userName");
+    socket.emit('chat message', userString+": "+input.value);
     input.value = '';
   }
 });
