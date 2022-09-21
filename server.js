@@ -21,13 +21,21 @@ const app = express();
 const http = require('http');
 const server = http.createServer(app);
 const { Server } = require("socket.io");
-const io = new Server(server);
+const io = new Server(server, {
+  cookie: true
+});
 const ioPORT = process.env.PORT || 3000;
 let convo;
 server.listen(ioPORT, () => {
   console.log('listening on http://localHost:3000');
 });
-
+// io.engine.on("headers", (headers, request) => {
+//   if (!request.headers.cookie) return;
+//   const cookies = parse(request.headers.cookie);
+//   if (!cookies.randomId) {
+//     headers["set-cookie"] = serialize("randomId", "abc", { maxAge: 86400 });
+//   }
+// });
 io.on('connection', (socket) => {
   console.log('connection open');
   io.emit('chat message', convo);
@@ -122,11 +130,15 @@ function doLoop(i) {
     bubbleArray.push(new Bubble());
     console.log("creating bubble:",bubbleArray);
     console.log('number of bubbles',bubbleArray.length);
+    if(bubbleArray.length > 30){
+      bubbleArray.unshift();
+    }
   }
   // UPdate
 
   for(let bubb of bubbleArray){
     bubb.update();
+    
   }
 
   io.emit('gameLoop', bubbleArray);
