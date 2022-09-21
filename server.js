@@ -25,7 +25,7 @@ const io = new Server(server);
 const ioPORT = process.env.PORT || 3000;
 let convo;
 server.listen(ioPORT, () => {
-  console.log('listening on *:3000');
+  console.log('listening on http://localHost:3000');
 });
 
 io.on('connection', (socket) => {
