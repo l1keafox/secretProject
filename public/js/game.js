@@ -102,6 +102,9 @@
 //     for (i = 0; i < GAME.entities.length; i += 1) {
 //       GAME.entities[i].render();
 //     }
+
+//      Maybe this is where we update chat?
+
 //   },
 //   loop: function () {
 //     requestAnimFrame(GAME.loop);
