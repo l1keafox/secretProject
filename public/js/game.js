@@ -90,7 +90,7 @@ var GAME = {
 
       // delete from array if remove property
       // flag is set to true
-      if (GAME.entities[i].remove) {
+      if (GAME.entities[i].remove || Gamepad.entities[i].y < -10) {
         GAME.entities.splice(i, 1);
       }
     }
@@ -239,7 +239,7 @@ let Input = {
 
 };
 // listen for clicks
-window.addEventListener('click', function(e) {
+GAME.canvas.addEventListener('click', function(e) {
   e.preventDefault();
 //  POP.Input.set(e);
     Input.set(e);

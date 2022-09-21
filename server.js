@@ -102,10 +102,6 @@ class Bubble{
   update(){
     this.y -= 1;
   
-    // if off screen, flag for removal
-    if (this.y < -10) {
-      this.remove = true;
-    }
   }
   render(){
     return 'circle';
