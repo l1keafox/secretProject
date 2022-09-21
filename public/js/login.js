@@ -42,8 +42,6 @@ async function signupFormHandler(event) {
       body: JSON.stringify({
         username: userName,
         password: password,
-        latitude: position.coords.latitude,
-        longitude: position.coords.longitude,
       }),
       headers: { "Content-Type": "application/json" },
     });
