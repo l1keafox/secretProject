@@ -186,7 +186,7 @@ const proms = new Promise((resolve, reject) => {
     if (socket.id) {
         resolve(socket);
     }
-  }, 100);
+  }, 1000);
 });
 
 async function startGame(){
@@ -226,7 +226,7 @@ async function startGame(){
     e.preventDefault();
     if (input.value) {
       const userString = localStorage.getItem("userName");
-      socket.emit('chat message', userString+": "+input.value+socket.id);
+      socket.emit('chat message', userString);
       input.value = '';
     }
   });
