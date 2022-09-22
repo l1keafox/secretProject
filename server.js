@@ -41,6 +41,12 @@ io.on('connection', (socket) => {
   /// How would we get session cookie?
   io.emit('chat message', convo);
 
+  socket.on('getScore',(msg) => {
+    let scoreArray = [];
+
+    io.emit('currentScore',scoreArray);
+  });
+
   socket.on('chat message', (msg) => {
     if(!convo) convo = [];
     convo.push(msg);
@@ -62,12 +68,12 @@ io.on('connection', (socket) => {
       //if(bubb.x )
       let badd = 10;
       if((bubb.x - msg.x < badd) && (bubb.x - msg.x > -badd ) && (bubb.y - msg.y < badd) && (bubb.y - msg.y > -badd ) ){
-        console.log('hit?');
         if(!convo) convo = [];
         console.log(msg);
-        if(global.getTerminalAmount && global.getTerminalAmount[socket.id]){
-            global.getTerminalAmount[socket.id].score++;
-            convo.push(' Bubble Hit By:'+global.getTerminalAmount[socket.id].name+" Current Score:"+global.getTerminalAmount[socket.id].score);
+        
+        if(global.userDataObj[global.idTooUserObj[socket.id]] ){
+          global.userDataObj[global.idTooUserObj[socket.id]].score++;
+            convo.push(' Bubble Hit By:'+global.userDataObj[global.idTooUserObj[socket.id]].name+" Current Score:"+global.userDataObj[global.idTooUserObj[socket.id]].score);
             if(convo.length > 10){
               convo.shift();
             }
@@ -78,10 +84,28 @@ io.on('connection', (socket) => {
         break;
       }
     }
-  })
+  });
+
   
 });
+function highScore(){
+  let scoreArray = [];
+  for(let id in global.userDataObj){
+    if(global.userDataObj[id].score){
+      scoreArray.push(global.userDataObj[id]);
+    }
+  }
 
+  scoreArray.sort(function (a, b) {
+    return (a.score - b.score)*-1;
+  });
+  io.emit('highScore',scoreArray);
+
+  // recheck score.
+  setTimeout(() => {
+    highScore();
+  }, 1000);
+}
 //server port
 const PORT = process.env.PORT || 3001;
 
@@ -164,3 +188,5 @@ function doLoop(i) {
 }
 
 doLoop(0);
+highScore();
+
