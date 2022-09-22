@@ -65,12 +65,14 @@ io.on('connection', (socket) => {
         console.log('hit?');
         if(!convo) convo = [];
         console.log(msg);
-        global.getTerminalAmount[socket.id].score++;
-        convo.push(' Bubble Hit By:'+global.getTerminalAmount[socket.id].name+" Current Score:"+global.getTerminalAmount[socket.id].score);
-        if(convo.length > 10){
-          convo.shift();
-        }
-        io.emit('chat message', convo);
+        if(global.getTerminalAmount && global.getTerminalAmount[socket.id]){
+            global.getTerminalAmount[socket.id].score++;
+            convo.push(' Bubble Hit By:'+global.getTerminalAmount[socket.id].name+" Current Score:"+global.getTerminalAmount[socket.id].score);
+            if(convo.length > 10){
+              convo.shift();
+            }
+            io.emit('chat message', convo);
+          }
     
         bubbleArray.splice(i,1);
         break;
