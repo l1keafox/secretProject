@@ -64,9 +64,9 @@ io.on('connection', (socket) => {
       if((bubb.x - msg.x < badd) && (bubb.x - msg.x > -badd ) && (bubb.y - msg.y < badd) && (bubb.y - msg.y > -badd ) ){
         console.log('hit?');
         if(!convo) convo = [];
-        global.getTerminalAmount[socket.id]
         console.log(msg);
-        convo.push(' Bubble Hit By:'+global.getTerminalAmount[socket.id]);
+        global.getTerminalAmount[socket.id].score++;
+        convo.push(' Bubble Hit By:'+global.getTerminalAmount[socket.id].name+" Current Score:"+global.getTerminalAmount[socket.id].score);
         if(convo.length > 10){
           convo.shift();
         }
@@ -145,10 +145,14 @@ function doLoop(i) {
     }
   }
   // UPdate
-
-  for(let bubb of bubbleArray){
+  let index = bubbleArray.length;
+  while(index--){
+    let bubb = bubbleArray[index];
     bubb.update();
-    
+     if(bubbleArray[index].y <= 0){
+       bubbleArray.splice(index,1);
+       break;
+     }
   }
 
   io.emit('gameLoop', bubbleArray);

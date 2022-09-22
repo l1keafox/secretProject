@@ -69,7 +69,10 @@ router.put('/auth/id/:ioID', (req,res) => {
   // and req.params.ioID should be the io session id
   console.log(req.session.userName, "Authicating ID:",req.params.ioID);
   if(!global.getTerminalAmount) global.getTerminalAmount = {};
-  global.getTerminalAmount[req.params.ioID] = req.session.userName;
+  global.getTerminalAmount[req.params.ioID] = {
+    name:req.session.userName,
+    score:0
+  }
   res.status(200).json({});
 });
 
