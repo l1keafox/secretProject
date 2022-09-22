@@ -76,26 +76,26 @@ var GAME = {
   },
 
   // Update will be removed, pretty much all update will be done server side.
-  update: function () {
-    GAME.nextBubble -= 1;
-    // if the counter is less than zero
-    if (GAME.nextBubble < 0) {
-      // put a new instance of bubble into our entities array
-      GAME.entities.push(new GAME.Bubble());
-      // reset the counter with a random value
-      GAME.nextBubble = Math.random() * 100 + 100;
-    }
-    // cycle through all entities and update as necessary
-    for (i = 0; i < GAME.entities.length; i += 1) {
-      GAME.entities[i].update();
+  // update: function () {
+  //   GAME.nextBubble -= 1;
+  //   // if the counter is less than zero
+  //   if (GAME.nextBubble < 0) {
+  //     // put a new instance of bubble into our entities array
+  //     GAME.entities.push(new GAME.Bubble());
+  //     // reset the counter with a random value
+  //     GAME.nextBubble = Math.random() * 100 + 100;
+  //   }
+  //   // cycle through all entities and update as necessary
+  //   for (i = 0; i < GAME.entities.length; i += 1) {
+  //     GAME.entities[i].update();
 
-      // delete from array if remove property
-      // flag is set to true
-      if (GAME.entities[i].remove || Gamepad.entities[i].y < -10) {
-        GAME.entities.splice(i, 1);
-      }
-    }
-  },
+  //     // delete from array if remove property
+  //     // flag is set to true
+  //     if (GAME.entities[i].remove || Gamepad.entities[i].y < -10) {
+  //       GAME.entities.splice(i, 1);
+  //     }
+  //   }
+  // },
   render: function () {
     var i;
 
@@ -104,12 +104,15 @@ var GAME = {
     // cycle through all entities and render to canvas
     if (localGameCache) {
       for (let gameObj of localGameCache) {
+        let color;
+        
         let ditto = GAME.Draw.circle(
           gameObj.x,
           gameObj.y,
           gameObj.r,
           "rgba(255,255,255,1)"
         );
+        GAME.Draw.text(gameObj.hits, gameObj.x, gameObj.y-1, "rgba(255,255,255,1)");
         //        console.log(ditto,gameObj.x,gameObj.y, gameObj.r);
       }
     }
@@ -168,27 +171,27 @@ var GAME = {
       GAME.ctx.fillText(string, x, y);
     },
   },
-  Bubble: function () {
-    this.type = "bubble";
-    this.r = 5; // the radius of the bubble
-    this.x = 100;
-    this.y = GAME.HEIGHT + 100; // make sure it starts off screen
-    this.remove = false;
+  // Bubble: function () {
+  //   this.type = "bubble";
+  //   this.r = 5; // the radius of the bubble
+  //   this.x = 100;
+  //   this.y = GAME.HEIGHT + 100; // make sure it starts off screen
+  //   this.remove = false;
 
-    this.update = function () {
-      // move up the screen by 1 pixel
-      this.y -= 1;
+  //   this.update = function () {
+  //     // move up the screen by 1 pixel
+  //     this.y -= 1;
 
-      // if off screen, flag for removal
-      if (this.y < -10) {
-        this.remove = true;
-      }
-    };
+  //     // if off screen, flag for removal
+  //     if (this.y < -10) {
+  //       this.remove = true;
+  //     }
+  //   };
 
-    this.render = function () {
-      GAME.Draw.circle(this.x, this.y, this.r, "rgba(255,255,255,1)");
-    };
-  },
+  //   this.render = function () {
+  //     GAME.Draw.circle(this.x, this.y, this.r, "rgba(255,255,255,1)");
+  //   };
+  // },
 };
 
 const proms = new Promise((resolve, reject) => {
@@ -199,7 +202,7 @@ const proms = new Promise((resolve, reject) => {
         resolve(socket);
       }
       doLoop();
-    }, 100);
+    }, 50);
   }
   doLoop();
 });

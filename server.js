@@ -11,7 +11,7 @@ const SequelizeStore = require("connect-session-sequelize")(session.Store);
 
 const routes = require("./controllers");
 const sequelize = require("./config/connection");
-
+// const physics = new System();
 //if we are using any helpers
 //const helpers = require('');
 
@@ -65,22 +65,23 @@ io.on('connection', (socket) => {
     let i = bubbleArray.length;
     while(i--){
       let bubb = bubbleArray[i];
+      // physics.getPotentials(body).forEach((collider) => {
+      //   if (physics.checkCollision(body, collider)) {
+      //     handleCollisions(physics.response);
+      //   }
+      // });
+      
       //if(bubb.x )
       let badd = 10;
       if((bubb.x - msg.x < badd) && (bubb.x - msg.x > -badd ) && (bubb.y - msg.y < badd) && (bubb.y - msg.y > -badd ) ){
-        if(!convo) convo = [];
-//        console.log(msg);
-        
-        if(global.userDataObj[global.idTooUserObj[socket.id]] ){
-          global.userDataObj[global.idTooUserObj[socket.id]].score++;
-            // convo.push(' Bubble Hit By:'+global.userDataObj[global.idTooUserObj[socket.id]].name+" Current Score:"+global.userDataObj[global.idTooUserObj[socket.id]].score);
-            // if(convo.length > 10){
-            //   convo.shift();
-            // }
-            // io.emit('chat message', convo);
+        bubb.hits--;
+        if(bubb.hits <= 0){
+          if(global.userDataObj[global.idTooUserObj[socket.id]] ){
+            global.userDataObj[global.idTooUserObj[socket.id]].score+=bubb.score;
           }
-    
-        bubbleArray.splice(i,1);
+      
+          bubbleArray.splice(i,1);
+        }
         break;
       }
     }
@@ -135,13 +136,16 @@ app.use(express.static(path.join(__dirname, "public")));
 app.use(routes);
 
 
+
 class Bubble{
   constructor(){
     this.type = "bubble";
-    this.r = 5; // the radius of the bubble
+    this.r =  Math.floor( Math.random()*10)+3; // the radius of the bubble
     this.x = Math.floor( Math.random()*320);
-    
     this.y = 480; // make sure it starts off screen
+    let rando = Math.floor( Math.random()*5)+1;
+    this.hits = rando;
+    this.score = rando;
   }
   update(){
     this.y -= 1;
@@ -163,8 +167,14 @@ function doLoop(i) {
   nextBubble--;
   if(nextBubble<= 0){
     nextBubble = bubbleTimer;
-    bubbleArray.push(new Bubble());
-//    console.log("creating bubble:",bubbleArray);
+    let newBubble = new Bubble();
+   // newBubble.circle = new Circle(position, radius, options);
+    //const circle = new Circle(position, radius, options);
+  //  newBubble.circle.setPosition(newBubble.x, newBubble.y);
+  //  physics.insert(newBubble.circle);
+    bubbleArray.push(newBubble);
+
+    //    console.log("creating bubble:",bubbleArray);
   //  console.log('number of bubbles',bubbleArray.length);
     if(bubbleArray.length > 30){
       bubbleArray.shift();
@@ -175,7 +185,7 @@ function doLoop(i) {
   while(index--){
     let bubb = bubbleArray[index];
     bubb.update();
-     if(bubbleArray[index].y <= 0){
+     if(bubbleArray[index].y <= -10){
        bubbleArray.splice(index,1);
        break;
      }
