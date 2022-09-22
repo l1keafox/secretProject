@@ -144,7 +144,7 @@ class Bubble{
     this.x = Math.floor( Math.random()*320);
     this.y = 480; // make sure it starts off screen
     let rando = Math.floor( Math.random()*5)+1;
-    this.speed = (Math.floor( Math.random()*5)+1 * 0.33) + 0.33
+    this.speed = (Math.floor( Math.random()*20)+1 * 0.05) + 0.1
     this.hits = rando;
     this.score = rando;
   }
