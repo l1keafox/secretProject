@@ -68,17 +68,17 @@ io.on('connection', (socket) => {
       //if(bubb.x )
       let badd = 10;
       if((bubb.x - msg.x < badd) && (bubb.x - msg.x > -badd ) && (bubb.y - msg.y < badd) && (bubb.y - msg.y > -badd ) ){
-        if(!convo) convo = [];
-        console.log(msg);
+//        if(!convo) convo = [];
+        // console.log(msg);
         
-        if(global.userDataObj[global.idTooUserObj[socket.id]] ){
-          global.userDataObj[global.idTooUserObj[socket.id]].score++;
-            convo.push(' Bubble Hit By:'+global.userDataObj[global.idTooUserObj[socket.id]].name+" Current Score:"+global.userDataObj[global.idTooUserObj[socket.id]].score);
-            if(convo.length > 10){
-              convo.shift();
-            }
-            io.emit('chat message', convo);
-          }
+        // if(global.userDataObj[global.idTooUserObj[socket.id]] ){
+        //   global.userDataObj[global.idTooUserObj[socket.id]].score++;
+        //     convo.push(' Bubble Hit By:'+global.userDataObj[global.idTooUserObj[socket.id]].name+" Current Score:"+global.userDataObj[global.idTooUserObj[socket.id]].score);
+        //     if(convo.length > 10){
+        //       convo.shift();
+        //     }
+        //     io.emit('chat message', convo);
+        //   }
     
         bubbleArray.splice(i,1);
         break;
