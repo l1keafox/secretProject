@@ -178,7 +178,9 @@ var GAME = {
   },
 };
 var socket = io();
-
+// here we send the id to the server?
+//socket.emit('linkUser',{userName:,id:socket.id});
+var thisUser;
 GAME.init();
 //GAME.resize();
 var form = document.querySelector('#form');
@@ -205,7 +207,7 @@ form.addEventListener('submit', function(e) {
   e.preventDefault();
   if (input.value) {
     const userString = localStorage.getItem("userName");
-    socket.emit('chat message', userString+": "+input.value);
+    socket.emit('chat message', userString+": "+input.value+socket.id);
     input.value = '';
   }
 });

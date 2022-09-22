@@ -10,6 +10,7 @@ router.post("/", async (req, res) => {
       latitude:req.body.latitude
 //      groupId: groupID,
     });   
+    console.log( req.id, req.body.username);
     req.session.save(() => {
       req.session.loggedIn = true;
       req.session.userName = req.body.username;

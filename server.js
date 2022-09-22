@@ -37,7 +37,7 @@ server.listen(ioPORT, () => {
 //   }
 // });
 io.on('connection', (socket) => {
-  console.log('connection open',socket.id,);
+  console.log('connection open',socket.id);
   /// How would we get session cookie?
   io.emit('chat message', convo);
 
