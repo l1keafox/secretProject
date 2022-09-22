@@ -64,8 +64,9 @@ io.on('connection', (socket) => {
       if((bubb.x - msg.x < badd) && (bubb.x - msg.x > -badd ) && (bubb.y - msg.y < badd) && (bubb.y - msg.y > -badd ) ){
         console.log('hit?');
         if(!convo) convo = [];
+        global.getTerminalAmount[socket.id]
         console.log(msg);
-        convo.push(' Bubble Hit By:'+socket.id);
+        convo.push(' Bubble Hit By:'+global.getTerminalAmount[socket.id]);
         if(convo.length > 10){
           convo.shift();
         }
@@ -137,10 +138,10 @@ function doLoop(i) {
   if(nextBubble<= 0){
     nextBubble = bubbleTimer;
     bubbleArray.push(new Bubble());
-    console.log("creating bubble:",bubbleArray);
-    console.log('number of bubbles',bubbleArray.length);
+//    console.log("creating bubble:",bubbleArray);
+  //  console.log('number of bubbles',bubbleArray.length);
     if(bubbleArray.length > 30){
-      bubbleArray.unshift();
+      bubbleArray.shift();
     }
   }
   // UPdate

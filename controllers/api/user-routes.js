@@ -51,7 +51,7 @@ router.post("/login", async (req, res) => {
 
     req.session.save(() => {
       req.session.loggedIn = true;
-
+      req.session.userName = req.body.userName;
       res
         .status(200)
         .json({ user: loginUser, message: "You are now logged in!" });
@@ -63,6 +63,16 @@ router.post("/login", async (req, res) => {
 });
 
 // Logout User
+router.put('/auth/id/:ioID', (req,res) => {
+  //req.session.user.id
+  //req.session.userName
+  // and req.params.ioID should be the io session id
+  console.log(req.session.userName, "Authicating ID:",req.params.ioID);
+  if(!global.getTerminalAmount) global.getTerminalAmount = {};
+  global.getTerminalAmount[req.params.ioID] = req.session.userName;
+  res.status(200).json({});
+});
+
 router.post("/logout", (req, res) => {
   if (req.session.loggedIn) {
     req.session.destroy(() => {

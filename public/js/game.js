@@ -10,6 +10,8 @@ const requestAnimFrame = (function () {
     }
   );
 })();
+var localMsgCache;
+var localGameCache;
 
 var GAME = {
   // set up some initial values
@@ -177,72 +179,92 @@ var GAME = {
     };
   },
 };
-var socket = io();
+
+const proms = new Promise((resolve, reject) => {
+  var socket = io();
+  setTimeout(() => {
+    if (socket.id) {
+        resolve(socket);
+    }
+  }, 100);
+});
+
+async function startGame(){
+  let socket = await proms;
+  console.log(socket.id,socket,"What is it?");
+  const response = await fetch(`/api/users/auth/id/${socket.id}`, {
+    method: "PUT",
+//    body: JSON.stringify({ userName, password }),
+    headers: { "Content-Type": "application/json" },
+  });
+  console.log('authicating user:',response);
+
+  var thisUser;
+  GAME.init();
+  //GAME.resize();
+  var form = document.querySelector('#form');
+  var input = document.querySelector('#input');
+  var logout = document.querySelector("#logout");
+  logout.addEventListener('click',async function(e){
+    e.preventDefault();
+    try{
+      const response = await fetch("/api/users/logout", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+      });
+      if (response.ok) {
+        document.location.replace("/");
+      } else {
+        alert("Logout Failed");
+      }
+    }catch (err){
+      console.log(err);
+    }
+  });
+  
+  form.addEventListener('submit', function(e) {
+    e.preventDefault();
+    if (input.value) {
+      const userString = localStorage.getItem("userName");
+      socket.emit('chat message', userString+": "+input.value+socket.id);
+      input.value = '';
+    }
+  });
+  socket.on('chat message', function(msg) {
+    localMsgCache = msg;
+  //  console.log(localMsgCache);
+  });
+  
+  socket.on('gameLoop', obj =>{
+    localGameCache = obj;
+  })
+  
+  let Input = {
+  
+    x: 0,
+    y: 0,
+    tapped :false,
+  
+    set: function(data) {
+      var offsetTop = GAME.canvas.offsetTop,
+      offsetLeft = GAME.canvas.offsetLeft;
+        this.x = data.pageX - offsetLeft;
+        this.y = data.pageY - offsetTop;      
+        this.tapped = true;
+        console.log('Tapped!',{x:this.x,y:this.y});
+        socket.emit('click',{x:this.x,y:this.y});
+        GAME.Draw.circle(this.x, this.y, 10, 'red');
+    }
+  
+  };
+  // listen for clicks
+  GAME.canvas.addEventListener('click', function(e) {
+    e.preventDefault();
+  //  POP.Input.set(e);
+      Input.set(e);
+  }, false);
+}
 // here we send the id to the server?
 //socket.emit('linkUser',{userName:,id:socket.id});
-var thisUser;
-GAME.init();
-//GAME.resize();
-var form = document.querySelector('#form');
-var input = document.querySelector('#input');
-var logout = document.querySelector("#logout");
-logout.addEventListener('click',async function(e){
-  e.preventDefault();
-  try{
-    const response = await fetch("/api/users/logout", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-    });
-    if (response.ok) {
-      document.location.replace("/");
-    } else {
-      alert("Logout Failed");
-    }
-  }catch (err){
-    console.log(err);
-  }
-});
+startGame()
 
-form.addEventListener('submit', function(e) {
-  e.preventDefault();
-  if (input.value) {
-    const userString = localStorage.getItem("userName");
-    socket.emit('chat message', userString+": "+input.value+socket.id);
-    input.value = '';
-  }
-});
-var localMsgCache;
-var localGameCache;
-socket.on('chat message', function(msg) {
-  localMsgCache = msg;
-//  console.log(localMsgCache);
-});
-
-socket.on('gameLoop', obj =>{
-  localGameCache = obj;
-})
-
-let Input = {
-
-  x: 0,
-  y: 0,
-  tapped :false,
-
-  set: function(data) {
-    var offsetTop = GAME.canvas.offsetTop,
-    offsetLeft = GAME.canvas.offsetLeft;
-      this.x = data.pageX - offsetLeft;
-      this.y = data.pageY - offsetTop;      
-      this.tapped = true;
-      console.log('Tapped!',{x:this.x,y:this.y});
-      socket.emit('click',{x:this.x,y:this.y});
-      GAME.Draw.circle(this.x, this.y, 10, 'red');
-  }
-
-};
-// listen for clicks
-GAME.canvas.addEventListener('click', function(e) {
-  e.preventDefault();
-//  POP.Input.set(e);
-    Input.set(e);
-}, false);
