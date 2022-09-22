@@ -226,7 +226,7 @@ async function startGame(){
     e.preventDefault();
     if (input.value) {
       const userString = localStorage.getItem("userName");
-      socket.emit('chat message', userString);
+      socket.emit('chat message', userString+": "+input.value);
       input.value = '';
     }
   });
