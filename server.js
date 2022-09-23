@@ -11,6 +11,7 @@ const SequelizeStore = require("connect-session-sequelize")(session.Store);
 
 const routes = require("./controllers");
 const sequelize = require("./config/connection");
+const cleaner = require('./utils/languageFilter');
 
 //if we are using any helpers
 //const helpers = require('');
@@ -43,7 +44,12 @@ io.on('connection', (socket) => {
 
   socket.on('chat message', (msg) => {
     if(!convo) convo = [];
-    convo.push(msg);
+
+    // Here we should clean the sentence.
+
+    let cleanMsg = cleaner(msg);
+    console.log(msg, cleanMsg);
+    convo.push(cleanMsg);
     console.log(convo);
     if(convo.length > 10){
       convo.shift();
