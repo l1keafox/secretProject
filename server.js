@@ -11,7 +11,7 @@ const SequelizeStore = require("connect-session-sequelize")(session.Store);
 
 const routes = require("./controllers");
 const sequelize = require("./config/connection");
-const cleaner = require('./utils/languageFilter');
+const cleaner = require('./public/js/languageFilter');
 
 //if we are using any helpers
 //const helpers = require('');

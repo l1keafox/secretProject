@@ -1,4 +1,5 @@
 // const cleanSentence = require("../../utils/languageFilter");
+// const cleaner = require('../../utils/languageFilter.js');
 
 const requestAnimFrame = (function () {
 	return (
@@ -231,7 +232,8 @@ async function startGame() {
 		e.preventDefault();
 		if (input.value) {
 			let sentence = input.value;
-
+			let cleaned = cleaner(sentence);
+			console.log(cleaned,sentence);
 			const userString = localStorage.getItem("userName");
 			socket.emit("chat message", userString + ": " + sentence);
 			input.value = "";
