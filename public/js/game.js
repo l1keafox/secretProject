@@ -232,7 +232,7 @@ async function startGame() {
 		e.preventDefault();
 		if (input.value) {
 			let sentence = input.value;
-			let cleaned = cleaner(sentence);
+			let cleaned = cleanSentence(sentence);
 			console.log(cleaned,sentence);
 			const userString = localStorage.getItem("userName");
 			socket.emit("chat message", userString + ": " + sentence);
