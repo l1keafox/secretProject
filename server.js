@@ -11,7 +11,8 @@ const SequelizeStore = require("connect-session-sequelize")(session.Store);
 
 const routes = require("./controllers");
 const sequelize = require("./config/connection");
-// const physics = new System();
+const { System, getBounceDirection,Circle, Point} =require("detect-collisions");
+const physics = new System();
 //if we are using any helpers
 //const helpers = require('');
 
@@ -60,31 +61,57 @@ io.on('connection', (socket) => {
     console.log('user disconnected');
   });  
   socket.on("click",(msg)=>{
-    console.log("getting click from?",msg,msg.x);
 
-    let i = bubbleArray.length;
-    while(i--){
-      let bubb = bubbleArray[i];
-      // physics.getPotentials(body).forEach((collider) => {
-      //   if (physics.checkCollision(body, collider)) {
-      //     handleCollisions(physics.response);
-      //   }
-      // });
+    console.log("getting click from?",msg,msg.x);1
+    let body = new Point(msg.x,msg.y);
+    body.setPosition(msg.x,msg.y);
+    physics.update();
+  //  console.log(body);
+//    let i = bubbleArray.length;
+    
+//    while(i--){
+//      let bubb = bubbleArray[i];
+      let nearBy = bubblePhysics;// physics.getPotentials(body);
+      console.log(nearBy.length);
+      nearBy.forEach((collider) => {
+        function testCollision(position, radius = 10) {
+          const circle = physics.createCircle(position, radius);
+          const getPotentials = physics.getPotentials(circle);
+          const collided = potentials.some((body) =>
+            physics.checkCollision(circle, body)
+          );
+        
+          physics.remove(circle);
+        
+          return collided;
+        }        
+        //let body = n
+        // new Point(msg.x,msg.y)
+        //bubblePhysics
+        //console.log(body,collider,physics.checkCollision(body, collider));
+//        if (physics.checkCollision(body, collider)) {
+       //   handleCollisions(physics.response);
+      //     console.log('TEST? H ITS');
+          // if(global.userDataObj[global.idTooUserObj[socket.id]] ){
+          //   global.userDataObj[global.idTooUserObj[socket.id]].score+=bubb.score;
+          // }
+      
+          // bubbleArray.splice(i,1);
+
+       // } else {
+        //  console.log('failure to hit?',nearBy.length);
+       // }
+      });
       
       //if(bubb.x )
-      let badd = 10;
-      if((bubb.x - msg.x < badd) && (bubb.x - msg.x > -badd ) && (bubb.y - msg.y < badd) && (bubb.y - msg.y > -badd ) ){
-        bubb.hits--;
-        if(bubb.hits <= 0){
-          if(global.userDataObj[global.idTooUserObj[socket.id]] ){
-            global.userDataObj[global.idTooUserObj[socket.id]].score+=bubb.score;
-          }
-      
-          bubbleArray.splice(i,1);
-        }
-        break;
-      }
-    }
+      // let badd = 10;
+      // if((bubb.x - msg.x < badd) && (bubb.x - msg.x > -badd ) && (bubb.y - msg.y < badd) && (bubb.y - msg.y > -badd ) ){
+      //   bubb.hits--;
+      //   if(bubb.hits <= 0){
+      //   }
+      //   break;
+      // }
+//    }
   });
 
   
@@ -159,38 +186,47 @@ class Bubble{
 // sequelize.sync({ force: false }).then(() => {
 //   app.listen(PORT, () => console.log("Now listening http://localhost:3001/"));
 // });
-let frames = 30;
+let frames = 60;
 let nextBubble = 0;
 let bubbleTimer = 40;
 let bubbleArray = [];
+let bubblePhysics = [];
 function doLoop(i) {
 //  console.log('Doin Game Loops',nextBubble);
-  nextBubble--;
+//  nextBubble--;
   if(nextBubble<= 0){
     nextBubble = bubbleTimer;
     let newBubble = new Bubble();
-   // newBubble.circle = new Circle(position, radius, options);
+    let position = {x:5,y:5};
+ //   newBubble.circle = new Circle(position, 5,{});
     //const circle = new Circle(position, radius, options);
-  //  newBubble.circle.setPosition(newBubble.x, newBubble.y);
-  //  physics.insert(newBubble.circle);
+//    newBubble.circle.setPosition(newBubble.x, newBubble.y);
+//console.log(newBubble.circle);
+//    physics.insert(newBubble.circle);
+    const circle = physics.createCircle(position, 5, {});
+    bubblePhysics.push(circle);
+//    console.log("Collsion Circle","CREATED",bubblePhysics.length);
     bubbleArray.push(newBubble);
 
     //    console.log("creating bubble:",bubbleArray);
   //  console.log('number of bubbles',bubbleArray.length);
-    if(bubbleArray.length > 30){
-      bubbleArray.shift();
-    }
+    // if(bubbleArray.length > 30){
+    //   bubbleArray.shift();
+    // }
   }
   // UPdate
   let index = bubbleArray.length;
   while(index--){
     let bubb = bubbleArray[index];
     bubb.update();
+    bubblePhysics[index].setPosition(bubb.x,bubb.y);
      if(bubbleArray[index].y <= -10){
        bubbleArray.splice(index,1);
+       bubblePhysics.pop();
        break;
      }
   }
+
 
   io.emit('gameLoop', bubbleArray);
   setTimeout(() => {

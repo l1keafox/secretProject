@@ -76,7 +76,7 @@ router.put('/auth/id/:ioID', (req,res) => {
     name:req.session.userName,
     score:0
   }
-  res.status(200).json({});
+  res.status(200).json([]);
 });
 
 router.post("/logout", (req, res) => {
