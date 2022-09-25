@@ -27,6 +27,8 @@ const io = new Server(server, {
 });
 const ioPORT = process.env.PORT || 3000;
 let convo;
+
+
 server.listen(ioPORT, () => {
   console.log('listening on http://localHost:3000');
 });
@@ -63,59 +65,36 @@ io.on('connection', (socket) => {
   socket.on("click",(msg)=>{
 
     console.log("getting click from?",msg,msg.x);1
-    let body = new Point(msg.x,msg.y);
-    body.setPosition(msg.x,msg.y);
-    physics.update();
+  //  let body = new Point(msg.x,msg.y);
+  //  body.setPosition(msg.x,msg.y);
+//    physics.update();
   //  console.log(body);
-//    let i = bubbleArray.length;
+    let i = bubbleArray.length;
     
-//    while(i--){
-//      let bubb = bubbleArray[i];
-      let nearBy = bubblePhysics;// physics.getPotentials(body);
-      console.log(nearBy.length);
-      nearBy.forEach((collider) => {
-        function testCollision(position, radius = 10) {
-          const circle = physics.createCircle(position, radius);
-          const getPotentials = physics.getPotentials(circle);
-          const collided = potentials.some((body) =>
-            physics.checkCollision(circle, body)
-          );
-        
-          physics.remove(circle);
-        
-          return collided;
-        }        
-        //let body = n
-        // new Point(msg.x,msg.y)
-        //bubblePhysics
-        //console.log(body,collider,physics.checkCollision(body, collider));
-//        if (physics.checkCollision(body, collider)) {
-       //   handleCollisions(physics.response);
-      //     console.log('TEST? H ITS');
-          // if(global.userDataObj[global.idTooUserObj[socket.id]] ){
-          //   global.userDataObj[global.idTooUserObj[socket.id]].score+=bubb.score;
-          // }
+    while(i--){
+      let bubb = bubbleArray[i];
+      let half = bubb.r;
+        if(distance(bubb.x+half,bubb.y+half,msg.x,msg.y) < bubb.r){
+          bubb.hits--;
+          console.log('hitted!');
+          if(bubb.hits <= 0){
+            bubbleArray.splice(i,1);
+          }
+        }
+    }
       
-          // bubbleArray.splice(i,1);
 
-       // } else {
-        //  console.log('failure to hit?',nearBy.length);
-       // }
-      });
-      
-      //if(bubb.x )
-      // let badd = 10;
-      // if((bubb.x - msg.x < badd) && (bubb.x - msg.x > -badd ) && (bubb.y - msg.y < badd) && (bubb.y - msg.y > -badd ) ){
-      //   bubb.hits--;
-      //   if(bubb.hits <= 0){
-      //   }
-      //   break;
-      // }
-//    }
   });
 
   
 });
+
+function distance(x1,y1,x2,y2){
+  let a =Math.abs (x1-x2);
+  let b =Math.abs (y1-y2);
+  return Math.sqrt((a*a)+(b*b))
+}
+
 function highScore(){
   let scoreArray = [];
   for(let id in global.userDataObj){
@@ -171,7 +150,7 @@ class Bubble{
     this.x = Math.floor( Math.random()*320);
     this.y = 480; // make sure it starts off screen
     let rando = Math.floor( Math.random()*5)+1;
-    this.speed = (Math.floor( Math.random()*7)+1 * 0.01) + 0.3
+    this.speed = (Math.floor( Math.random()*14)+1 * 0.001) + 0.2
     this.hits = rando;
     this.score = rando;
   }
@@ -193,33 +172,17 @@ let bubbleArray = [];
 let bubblePhysics = [];
 function doLoop(i) {
 //  console.log('Doin Game Loops',nextBubble);
-//  nextBubble--;
+  nextBubble--;
   if(nextBubble<= 0){
     nextBubble = bubbleTimer;
     let newBubble = new Bubble();
-    let position = {x:5,y:5};
- //   newBubble.circle = new Circle(position, 5,{});
-    //const circle = new Circle(position, radius, options);
-//    newBubble.circle.setPosition(newBubble.x, newBubble.y);
-//console.log(newBubble.circle);
-//    physics.insert(newBubble.circle);
-    const circle = physics.createCircle(position, 5, {});
-    bubblePhysics.push(circle);
-//    console.log("Collsion Circle","CREATED",bubblePhysics.length);
     bubbleArray.push(newBubble);
-
-    //    console.log("creating bubble:",bubbleArray);
-  //  console.log('number of bubbles',bubbleArray.length);
-    // if(bubbleArray.length > 30){
-    //   bubbleArray.shift();
-    // }
   }
   // UPdate
   let index = bubbleArray.length;
   while(index--){
     let bubb = bubbleArray[index];
     bubb.update();
-    bubblePhysics[index].setPosition(bubb.x,bubb.y);
      if(bubbleArray[index].y <= -10){
        bubbleArray.splice(index,1);
        bubblePhysics.pop();
