@@ -11,8 +11,7 @@ const SequelizeStore = require("connect-session-sequelize")(session.Store);
 
 const routes = require("./controllers");
 const sequelize = require("./config/connection");
-const { System, getBounceDirection,Circle, Point} =require("detect-collisions");
-const physics = new System();
+
 //if we are using any helpers
 //const helpers = require('');
 
@@ -22,11 +21,12 @@ const app = express();
 const http = require('http');
 const server = http.createServer(app);
 const { Server } = require("socket.io");
-const io = new Server(server, {
+// This is cheating, I wish there was an way
+// to grab this server that is created.
+global.io = new Server(server, {
   cookie: true
 });
 const ioPORT = process.env.PORT || 3000;
-let convo;
 
 
 server.listen(ioPORT, () => {
@@ -39,51 +39,26 @@ server.listen(ioPORT, () => {
 //     headers["set-cookie"] = serialize("randomId", "abc", { maxAge: 86400 });
 //   }
 // });
+const {newConnection,chatting,scoring} = require('./sockets');
+
+io.on('connection', newConnection );
+io.on('connection', chatting );
+io.on('connection', scoring);
 io.on('connection', (socket) => {
-  console.log('connection open',socket.id);
-  /// How would we get session cookie?
-  io.emit('chat message', convo);
-
-  socket.on('getScore',(msg) => {
-    let scoreArray = [];
-
-    io.emit('currentScore',scoreArray);
-  });
-
-  socket.on('chat message', (msg) => {
-    if(!convo) convo = [];
-    convo.push(msg);
-    console.log(convo);
-    if(convo.length > 10){
-      convo.shift();
-    }
-    io.emit('chat message', convo);
-  });
-  socket.on('disconnect', () => {
-    console.log('user disconnected');
-  });  
   socket.on("click",(msg)=>{
-
     console.log("getting click from?",msg,msg.x);1
-  //  let body = new Point(msg.x,msg.y);
-  //  body.setPosition(msg.x,msg.y);
-//    physics.update();
-  //  console.log(body);
     let i = bubbleArray.length;
     
     while(i--){
       let bubb = bubbleArray[i];
-      let half = bubb.r;
-        if(distance(bubb.x+half,bubb.y+half,msg.x,msg.y) < bubb.r){
-          bubb.hits--;
-          console.log('hitted!');
-          if(bubb.hits <= 0){
-            bubbleArray.splice(i,1);
-          }
+      if(distance(bubb.x+bubb.r,bubb.y+bubb.r,msg.x,msg.y) < bubb.r){
+        bubb.hits--;
+        console.log('hitted!');
+        if(bubb.hits <= 0){
+          bubbleArray.splice(i,1);
         }
+      }
     }
-      
-
   });
 
   
@@ -95,24 +70,7 @@ function distance(x1,y1,x2,y2){
   return Math.sqrt((a*a)+(b*b))
 }
 
-function highScore(){
-  let scoreArray = [];
-  for(let id in global.userDataObj){
-    if(global.userDataObj[id].score){
-      scoreArray.push(global.userDataObj[id]);
-    }
-  }
 
-  scoreArray.sort(function (a, b) {
-    return (a.score - b.score)*-1;
-  });
-  io.emit('highScore',scoreArray);
-
-  // recheck score.
-  setTimeout(() => {
-    highScore();
-  }, 1000);
-}
 //server port
 const PORT = process.env.PORT || 3001;
 
@@ -150,7 +108,7 @@ class Bubble{
     this.x = Math.floor( Math.random()*320);
     this.y = 480; // make sure it starts off screen
     let rando = Math.floor( Math.random()*5)+1;
-    this.speed = (Math.floor( Math.random()*14)+1 * 0.001) + 0.2
+    this.speed = (Math.floor( Math.random()*7)+.05 * 0.001) + 0.2
     this.hits = rando;
     this.score = rando;
   }
@@ -169,7 +127,6 @@ let frames = 60;
 let nextBubble = 0;
 let bubbleTimer = 40;
 let bubbleArray = [];
-let bubblePhysics = [];
 function doLoop(i) {
 //  console.log('Doin Game Loops',nextBubble);
   nextBubble--;
@@ -185,7 +142,6 @@ function doLoop(i) {
     bubb.update();
      if(bubbleArray[index].y <= -10){
        bubbleArray.splice(index,1);
-       bubblePhysics.pop();
        break;
      }
   }
@@ -198,5 +154,5 @@ function doLoop(i) {
 }
 
 doLoop(0);
-highScore();
+
 
