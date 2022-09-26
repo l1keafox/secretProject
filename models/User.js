@@ -22,6 +22,9 @@ User.init(
       //   len:[8],
       // }
     },
+    record: {
+      
+    }
   },
   {
     sequelize,
