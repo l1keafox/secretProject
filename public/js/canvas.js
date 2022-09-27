@@ -59,7 +59,10 @@ let GAME = {
         },
         img: function(image, dx, dy){
         //https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/drawImage
-           GAME.ctx.drawImage(image, dx, dy);
+        const img1 = new Image(); // Image constructor
+        img1.src = image;
+        img1.alt = 'alt';        
+           GAME.ctx.drawImage(img1, dx, dy);
         }
     }
 

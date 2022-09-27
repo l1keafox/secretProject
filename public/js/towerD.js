@@ -54,9 +54,12 @@ setTimeout(async function(){
         GAME.init('#towerD'); //pass it the object ID that it's creating on
         GAME.render = function(){
             GAME.Draw.rect(0,0, GAME.WIDTH,GAME.HEIGHT,"#306");
+            console.log(localGameCache);
             if(localGameCache){
                 for(let gameObj in localGameCache){
-//                    console.log(gameObj);
+
+                    console.log(localGameCache[gameObj],gameObj);
+                    GAME.Draw.img(localGameCache[gameObj].visual.img,localGameCache[gameObj].visual.x,localGameCache[gameObj].visual.y);
                 }
             }
         }

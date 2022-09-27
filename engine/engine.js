@@ -9,13 +9,18 @@ once init starts, it will create an game loop every X secs
 
 */
 
-function createBase() {
+function createBase(x,y) {
     const mainBase = {
         hits : 100,
         hitsMax : 100,
         range : 10,
         attack : 2,
         attackSpeed : 1,
+        visual: {
+            img: "/imgs/head1.PNG",
+            x:x,
+            y:y
+        }
         // cost;
         // level;
         // repawnTimer;
@@ -29,15 +34,26 @@ function createBase() {
         },
         death: function(){
     
+        },
+        get: function(){
+            // this  returns an special object that is used for the front end.
+            return {
+                visual: mainBase.visual,
+            };
+        },
+        setImage: function(erw){
+            mainBase.visual.img = erw;
         }
     }
 }
 
 
 function initGame(Game){
-    console.log(Game);
-     Game.playerOne.Base = createBase();
-     Game.playerTwo.Base = createBase();
+    if(Game.playerOne.Base) return;
+    console.log("Init game cause ya");
+     Game.playerOne.Base = createBase(10,10);
+     Game.playerTwo.Base = createBase(200,350);
+     Game.playerTwo.Base.setImage("/imgs/head2.PNG");
 }
 
 let gameData;// = {};
@@ -50,12 +66,13 @@ function doGameLoop()
  // Your code here
         let _game = gameData[gameId];
         //console.log(gameId,"testing", {msg:gameId});
-        console.log(_game);
+//        console.log(_game);
         initGame(_game);
         
 
         // At the very end it'll send game data!
-        io.emit(gameId, {msg:gameId}); // this emits the game object via gameId.
+        console.log(_game.playerOne.Base.get());
+        io.emit(gameId, [_game.playerOne.Base.get(),_game.playerTwo.Base.get()]); // this emits the game object via gameId.
     }
 }
 
