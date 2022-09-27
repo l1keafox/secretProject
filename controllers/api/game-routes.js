@@ -14,11 +14,11 @@ router.put('/join/', (req,res) => {
     if(!lookForGame){
         console.log('Create Game',lookForGame);
         lookForGame = new Game();
-        lookForGame.id = 1001+Math.floor(Math.random()*10);
-        lookForGame.playerOne = req.session.userName;
+        lookForGame.id = 1001+Math.floor(Math.random()*10)+"x";
+        lookForGame.playerOne.name = req.session.userName;
     } else {
         console.log('Found a game',lookForGame);
-        lookForGame.playerTwo = req.session.userName;
+        lookForGame.playerTwo.name = req.session.userName;
         console.log( "Now we start the game, both users should now be going too ",lookForGame);
     }
     res.status(200).json([]);
@@ -36,11 +36,11 @@ router.put('/join/', (req,res) => {
         res.status(200).json(false);
         return;
     }
-    if(game.playerOne === req.session.userName){
-        if(game.playerTwo){
+    if(game.playerOne.name === req.session.userName){
+        if(game.playerTwo.name){
             Engine.addGame(lookForGame);
             req.session.save(() => {
-                req.session.gameInfo = lookForGame;
+                req.session.game = lookForGame;
                  res
                    .status(201)
                    .json(lookForGame);
@@ -48,11 +48,11 @@ router.put('/join/', (req,res) => {
              return;
        }
     }
-    if(game.playerTwo === req.session.userName){
-        if(game.playerOne){
+    if(game.playerTwo.name === req.session.userName){
+        if(game.playerOne.name){
             Engine.addGame(lookForGame);
             req.session.save(() => {
-                req.session.gameInfo = lookForGame;
+                req.session.game = lookForGame;
                  res
                    .status(201)
                    .json(lookForGame);

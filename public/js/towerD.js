@@ -1,7 +1,7 @@
 // Client side towerD.js logic.
-
+var socket;
 const proms = new Promise((resolve, reject) => {
-    var socket = io();
+     socket = io();
     function doLoop() {
       setTimeout(() => {
         if (socket.id) {
@@ -22,14 +22,15 @@ async function getGameInfo() {
         //    body: JSON.stringify({ userName, password }),
         headers: { "Content-Type": "application/json" },
       });
-      console.log(response);
     let rsult = await response.json();
+    console.log(response,rsult,"dasf");
+    gameInfo = rsult;
     return rsult;
   }
 
 let gameInfo;
-gameInfo = getGameInfo();
-//let socket = await proms;
+getGameInfo();
+socket = io();
 
 // const response = await fetch(`/api/users/auth/id/${socket.id}`, {
 //     method: "PUT",
@@ -41,9 +42,23 @@ gameInfo = getGameInfo();
 // Let's wait a bit for the client communication.
 // So called load time, this is designed to make sure
 // the above data has been async'd
-
-setTimeout(function(){
+let localGameCache;
+setTimeout(async function(){
     if(gameInfo){
+      //  var socket = await io();
+        console.log("listening on", gameInfo.id,socket.id );
+        socket.on(gameInfo.id, obj => {
+            localGameCache = obj;
+          });
 
+        GAME.init('#towerD'); //pass it the object ID that it's creating on
+        GAME.render = function(){
+            GAME.Draw.rect(0,0, GAME.WIDTH,GAME.HEIGHT,"#306");
+            if(localGameCache){
+                for(let gameObj in localGameCache){
+//                    console.log(gameObj);
+                }
+            }
+        }
     }
 }, 1000); 

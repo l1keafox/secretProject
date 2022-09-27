@@ -1,7 +1,11 @@
 class Game {
     constructor(){
-        this.playerOne;
-        this.playerTwo;
+        this.playerOne = {
+            name:null,
+        };
+        this.playerTwo = {
+            name:null,
+        };
         this.gameTime;
         this.id;
     }

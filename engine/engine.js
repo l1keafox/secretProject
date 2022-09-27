@@ -12,32 +12,37 @@ once init starts, it will create an game loop every X secs
 let gameData;// = {};
 let intervalID;
 const frames = 30;
-function myCallback()
+// This goes through all current games to play.
+function doGameLoop()
 {
- // Your code here
- // Parameters are purely optional.
-// console.log('loop yo');
     for(let gameId in gameData){
-        console.log(gameId,gameData[gameId]);
-        console.log(io);
-        io.emit(gameId, {msg:gameId}); // This will
+ // Your code here
+        let _game = gameData[gameId];
+        //console.log(gameId,"testing", {msg:gameId});
+        console.log(_game);
+
+        
+
+        // At the very end it'll send game data!
+        io.emit(gameId, {msg:gameId}); // this emits the game object via gameId.
     }
 }
 
-function socketIns(){
+function socketIns(socket){
+    // These are emitted from the 
     //socket.on()
 }
 
 
 module.exports = {
     init : function() {
-        io.on('connection', socketIns);
         gameData = {};
-        intervalID = setInterval(myCallback, frames/1000);
+        intervalID = setInterval(doGameLoop, frames/1000);
     },
     // addGame function takes an Game.js object
     addGame : function(Game){  
         console.log("adding ", Game, "with id:",Game.id);
         gameData[Game.id] = Game;
+        io.on('connection', socketIns);
     },
 };

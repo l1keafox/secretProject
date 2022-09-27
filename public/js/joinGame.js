@@ -9,7 +9,7 @@ async function amInGame(){
     });
     let gameInfo = await response.json();
     // cookie is set on server side for this client.
-    console.log(gameInfo,"My game");
+    console.log(gameInfo,"My game",response.status);
     if(response.status === 201){
       document.location.replace("/tower");
     } else {

@@ -17,12 +17,11 @@ let GAME = {
     WIDTH:320,
     HEIGHT: 480,
     RATIO:null, // needed for screen sizing
-    elementId:null, // this needs to be set 
     currentWidth:null,
     currentHeight:null,
     canvas:null,
     ctx:null,
-    init:function(){
+    init:function(elementId){
         this.RATIO = this.WIDTH / this.HEIGHT;
         this.currentHeight = this.WIDTH;
         this.currentHeight = this.HEIGHT;
@@ -39,23 +38,23 @@ let GAME = {
 
         window.setTimeout(()=>{window.scrollTo(0,1)} ,1);
 
-        this.loop
+        this.loop();
     },
     loop:function(){
-        requestAnimFrame(this.loop);
-        this.render();
+        requestAnimFrame(GAME.loop);
+        GAME.render();
     },
     render:function(){
-
+        // This should be overwritten by the caller of canvas.
         // This is the background
-        this.Draw.rect(0,0, this.WIDTH,this.HEIGHT,"#036");
-
+        GAME.Draw.rect(0,0, this.WIDTH,this.HEIGHT,"#036");
+        console.log('underrednered');
         // Then we draw game objects.
     },
     Draw:{
         rect: function(x,y,w,h,col){
-            this.ctx.fillStyle = col;
-            this.ctx.fillRect(x,y,w,h);
+            GAME.ctx.fillStyle = col;
+            GAME.ctx.fillRect(x,y,w,h);
         },
     }
 
