@@ -1,11 +1,11 @@
 class User {
     constructor(){
-        this.hits;
-        this.hitsMax;
-        this.range;
-        this.attack;
+        this.hits = 10;
+        this.hitsMax = 10;
+        this.range = 10;
+        this.attack = 1;
         this.attackSpeed;
-        this.movementSpeed;
+        this.movementSpeed = 10;
         this.cost;
         this.level;
         this.repawnTimer;

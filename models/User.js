@@ -22,9 +22,9 @@ User.init(
       //   len:[8],
       // }
     },
-    record: {
-      
-    }
+    // record: {
+        //type: Datatypes.INTEGER
+    // }
   },
   {
     sequelize,

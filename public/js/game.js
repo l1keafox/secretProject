@@ -257,7 +257,7 @@ async function startGame() {
 
   socket.on("highScore",msg=>{
     highScore = msg;
-    console.log("getting high score:",highScore);
+//    console.log("getting high score:",highScore);
   });
 
   socket.on("gameLoop", (obj) => {
