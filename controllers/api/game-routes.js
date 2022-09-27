@@ -6,6 +6,10 @@ const {Engine} = require("./../../engine");
 
 let lookForGame;
 router.put('/join/', (req,res) => {
+  if(lookForGame.playerOne.name  && lookForGame.playerTwo.name){
+    console.log('Found full game, time for empty one!');
+    lookForGame = undefined;
+  }
     //req.session.user.id
     //req.session.userName
     // and req.params.ioID should be the io session id
