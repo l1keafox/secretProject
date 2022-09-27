@@ -53,9 +53,14 @@ let GAME = {
     },
     Draw:{
         rect: function(x,y,w,h,col){
+        //https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/fillRect
             GAME.ctx.fillStyle = col;
             GAME.ctx.fillRect(x,y,w,h);
         },
+        img: function(image, dx, dy){
+        //https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/drawImage
+           GAME.ctx.drawImage(image, dx, dy);
+        }
     }
 
 }

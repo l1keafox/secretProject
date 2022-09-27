@@ -9,6 +9,37 @@ once init starts, it will create an game loop every X secs
 
 */
 
+function createBase() {
+    const mainBase = {
+        hits : 100,
+        hitsMax : 100,
+        range : 10,
+        attack : 2,
+        attackSpeed : 1,
+        // cost;
+        // level;
+        // repawnTimer;
+        // visual;
+
+    }
+
+    return {
+        attack: function(){
+
+        },
+        death: function(){
+    
+        }
+    }
+}
+
+
+function initGame(Game){
+    console.log(Game);
+     Game.playerOne.Base = createBase();
+     Game.playerTwo.Base = createBase();
+}
+
 let gameData;// = {};
 let intervalID;
 const frames = 30;
@@ -20,7 +51,7 @@ function doGameLoop()
         let _game = gameData[gameId];
         //console.log(gameId,"testing", {msg:gameId});
         console.log(_game);
-
+        initGame(_game);
         
 
         // At the very end it'll send game data!
