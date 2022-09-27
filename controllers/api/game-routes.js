@@ -2,6 +2,8 @@ const router = require("express").Router();
 
 const Game = require('./../../models/Game');
 
+const {Engine} = require("./../../engine");
+
 let lookForGame;
 router.put('/join/', (req,res) => {
     //req.session.user.id
@@ -22,7 +24,11 @@ router.put('/join/', (req,res) => {
     res.status(200).json([]);
   });
 
-  router.get('/status',(req,res) =>{
+  router.get('/status',(req,res)=>{
+    res.status(200).json(req.session.game);
+  });
+
+  router.get('/joinStatus',(req,res) =>{
     // This route is checked by the client side too see if they are in a game, when.
 //    for(let game of lookForGame){
     let game = lookForGame;
@@ -32,17 +38,19 @@ router.put('/join/', (req,res) => {
     }
     if(game.playerOne === req.session.userName){
         if(game.playerTwo){
+            Engine.addGame(lookForGame);
             req.session.save(() => {
                 req.session.gameInfo = lookForGame;
                  res
                    .status(201)
                    .json(lookForGame);
               });
-            return;
-        }
+             return;
+       }
     }
     if(game.playerTwo === req.session.userName){
         if(game.playerOne){
+            Engine.addGame(lookForGame);
             req.session.save(() => {
                 req.session.gameInfo = lookForGame;
                  res

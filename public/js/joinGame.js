@@ -2,17 +2,15 @@
 
 async function amInGame(){
   setTimeout(async() => {
-    const response = await fetch(`/api/game/status`, {
+    const response = await fetch(`/api/game/joinStatus`, {
 //      method: "GET",
       //    body: JSON.stringify({ userName, password }),
       headers: { "Content-Type": "application/json" },
     });
-    let raz = await response.json();
-    console.log(raz,raz.id);
-
-
+    let gameInfo = await response.json();
+    // cookie is set on server side for this client.
+    console.log(gameInfo,"My game");
     if(response.status === 201){
-  
       document.location.replace("/tower");
     } else {
       amInGame();
