@@ -7,8 +7,12 @@ async function amInGame(){
       //    body: JSON.stringify({ userName, password }),
       headers: { "Content-Type": "application/json" },
     });
-    console.log(response,response.status);
+    let raz = await response.json();
+    console.log(raz,raz.id);
+
+
     if(response.status === 201){
+  
       document.location.replace("/tower");
     } else {
       amInGame();
@@ -24,7 +28,7 @@ async function joinGame(event) {
         //    body: JSON.stringify({ userName, password }),
         headers: { "Content-Type": "application/json" },
       });
-    console.log(response.status);
+    console.log(response.status,response.body);
     if(response.status === 200){
         console.log("Status is good, update here on if there's an game. Maybe we use a status object?");
         amInGame();

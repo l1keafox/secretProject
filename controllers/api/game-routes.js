@@ -12,6 +12,7 @@ router.put('/join/', (req,res) => {
     if(!lookForGame){
         console.log('Create Game',lookForGame);
         lookForGame = new Game();
+        lookForGame.id = 1001+Math.floor(Math.random()*10);
         lookForGame.playerOne = req.session.userName;
     } else {
         console.log('Found a game',lookForGame);
@@ -26,22 +27,32 @@ router.put('/join/', (req,res) => {
 //    for(let game of lookForGame){
     let game = lookForGame;
     if(!game) {
-        res.status(200).json({game:false});
+        res.status(200).json(false);
         return;
     }
     if(game.playerOne === req.session.userName){
         if(game.playerTwo){
-            res.status(201).json({game:true});
+            req.session.save(() => {
+                req.session.gameInfo = lookForGame;
+                 res
+                   .status(201)
+                   .json(lookForGame);
+              });
             return;
         }
     }
     if(game.playerTwo === req.session.userName){
         if(game.playerOne){
-            res.status(201).json({game:true});
+            req.session.save(() => {
+                req.session.gameInfo = lookForGame;
+                 res
+                   .status(201)
+                   .json(lookForGame);
+              });
             return;
         }
     }
-    res.status(200).json({game:false});
+    res.status(200).json(false);
 
   //  }
   });

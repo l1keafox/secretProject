@@ -3,6 +3,7 @@ class Game {
         this.playerOne;
         this.playerTwo;
         this.gameTime;
+        this.id;
     }
 }
 
